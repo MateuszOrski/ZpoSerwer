@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Optional; // ADD THIS IMPORT
 
 @RestController
 @RequestMapping("/api/students")
@@ -69,13 +70,15 @@ public class StudentController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // FIXED DELETE METHOD
     @DeleteMapping("/{indexNumber}")
     public ResponseEntity<Void> deleteStudent(@PathVariable String indexNumber) {
-        return studentService.getStudentByIndexNumber(indexNumber)
-                .map(student -> {
-                    studentService.deleteStudent(student.getId());
-                    return ResponseEntity.<Void>ok().build();
-                })
-                .orElse(ResponseEntity.notFound().build());
+        Optional<Student> student = studentService.getStudentByIndexNumber(indexNumber);
+        if (student.isPresent()) {
+            studentService.deleteStudent(student.get().getId());
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

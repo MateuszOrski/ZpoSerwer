@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Optional; // ADD THIS IMPORT
 
 @RestController
 @RequestMapping("/api/schedules")
@@ -59,13 +60,15 @@ public class ScheduleController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // FIXED DELETE METHOD
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSchedule(@PathVariable Long id) {
-        return scheduleService.getScheduleById(id)
-                .map(schedule -> {
-                    scheduleService.deleteSchedule(id);
-                    return ResponseEntity.<Void>ok().build();
-                })
-                .orElse(ResponseEntity.notFound().build());
+        Optional<Schedule> schedule = scheduleService.getScheduleById(id);
+        if (schedule.isPresent()) {
+            scheduleService.deleteSchedule(id);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

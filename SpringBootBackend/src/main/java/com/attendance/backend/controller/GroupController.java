@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Optional; // ADD THIS IMPORT
 
 @RestController
 @RequestMapping("/api/groups")
@@ -59,14 +60,16 @@ public class GroupController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // FIXED DELETE METHOD
     @DeleteMapping("/{name}")
     public ResponseEntity<Void> deleteGroup(@PathVariable String name) {
-        return groupService.getGroupByName(name)
-                .map(group -> {
-                    groupService.deleteGroup(group.getId());
-                    return ResponseEntity.<Void>ok().build();
-                })
-                .orElse(ResponseEntity.notFound().build());
+        Optional<Group> group = groupService.getGroupByName(name);
+        if (group.isPresent()) {
+            groupService.deleteGroup(group.get().getId());
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/health")
