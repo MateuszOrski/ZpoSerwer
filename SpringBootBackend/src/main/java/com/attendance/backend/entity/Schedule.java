@@ -6,9 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "schedules")
@@ -45,13 +43,12 @@ public class Schedule {
     @Column(name = "created_date", nullable = false)
     private LocalDateTime createdDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "group_id", nullable = false)
-    @JsonManagedReference  //dodane przez blad przy wprowadzaniu studentow
     private Group group;
 
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference  //dodane przez blad przy wprowadzaniu studentow
+    @JsonIgnore  // Ignoruj attendances w JSON - unikaj rekursji
     private List<Attendance> attendances;
 
     public Schedule() {

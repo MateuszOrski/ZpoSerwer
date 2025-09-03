@@ -5,12 +5,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "`groups`")  // DODANE: Backtiki wokół nazwy tabeli
+@Table(name = "`groups`")
 public class Group {
 
     @Id
@@ -34,10 +32,11 @@ public class Group {
     private Boolean active = true;
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore  // Ignoruj students w JSON - unikaj rekursji
     private List<Student> students;
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference  //dodane przez blad przy wprowadzaniu studentow
+    @JsonIgnore  // Ignoruj schedules w JSON - unikaj rekursji
     private List<Schedule> schedules;
 
     public Group() {

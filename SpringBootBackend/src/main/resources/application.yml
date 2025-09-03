@@ -6,44 +6,32 @@ spring:
     name: attendance-backend
 
   datasource:
-    # MySQL Configuration
     url: jdbc:mysql://localhost:3306/attendance_db?useSSL=false&serverTimezone=Europe/Warsaw&allowPublicKeyRetrieval=true
     username: attendance_user
     password: attendance_password
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-    # H2 Database (zakomentowane - dla testów)
-    # url: jdbc:h2:mem:attendance_db
-    # driverClassName: org.h2.Driver
-    # username: sa
-    # password: password
-
   jpa:
     hibernate:
-      #zmiana z create-drop na update WAZNE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      ddl-auto: update # update dla pierwszego uruchomienia, potem update
+      ddl-auto: update
     show-sql: true
     format-sql: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
-    defer-datasource-initialization: false  # Wyłączone dla MySQL
+    defer-datasource-initialization: false
+    open-in-view: true
 
-  # Konfiguracja inicjalizacji bazy danych
   sql:
     init:
-      mode: never  # Wyłączone dla MySQL (używaj migracji lub ręcznego tworzenia danych)
-
-  # H2 Console (zakomentowane)
-  # h2:
-  #   console:
-  #     enabled: true
-  #     path: /h2-console
+      mode: never
 
   jackson:
     time-zone: Europe/Warsaw
     date-format: yyyy-MM-dd'T'HH:mm:ss
+    serialization:
+      fail-on-empty-beans: false
 
 logging:
   level:
