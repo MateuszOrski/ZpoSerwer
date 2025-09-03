@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.Optional; // ADD THIS IMPORT
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/students")
@@ -60,7 +60,7 @@ public class StudentController {
                 .map(existingStudent -> {
                     existingStudent.setFirstName(student.getFirstName());
                     existingStudent.setLastName(student.getLastName());
-                    existingStudent.setEmail(student.getEmail());
+                    // USUNIĘTE: existingStudent.setEmail(student.getEmail());
                     if (student.getGroup() != null) {
                         existingStudent.setGroup(student.getGroup());
                     }
@@ -70,7 +70,6 @@ public class StudentController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // FIXED DELETE METHOD
     @DeleteMapping("/{indexNumber}")
     public ResponseEntity<Void> deleteStudent(@PathVariable String indexNumber) {
         Optional<Student> student = studentService.getStudentByIndexNumber(indexNumber);

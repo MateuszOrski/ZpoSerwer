@@ -1,6 +1,5 @@
 package com.attendance.backend.dto;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -22,9 +21,7 @@ public class StudentDTO {
     @Pattern(regexp = "\\d{6}", message = "Numer indeksu musi składać się z dokładnie 6 cyfr")
     private String indexNumber;
 
-    @Email(message = "Nieprawidłowy format email")
-    @Size(max = 100, message = "Email nie może być dłuższy niż 100 znaków")
-    private String email;
+    // USUNIĘTE POLE EMAIL
 
     private LocalDateTime createdDate;
 
@@ -54,9 +51,8 @@ public class StudentDTO {
         this.fullName = firstName + " " + lastName;
     }
 
-    public StudentDTO(String firstName, String lastName, String indexNumber, String email, String groupName) {
+    public StudentDTO(String firstName, String lastName, String indexNumber, String groupName) {
         this(firstName, lastName, indexNumber);
-        this.email = email;
         this.groupName = groupName;
     }
 
@@ -79,8 +75,7 @@ public class StudentDTO {
     public String getIndexNumber() { return indexNumber; }
     public void setIndexNumber(String indexNumber) { this.indexNumber = indexNumber; }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    // USUNIĘTE GETTERY I SETTERY DLA EMAIL
 
     public LocalDateTime getCreatedDate() { return createdDate; }
     public void setCreatedDate(LocalDateTime createdDate) { this.createdDate = createdDate; }

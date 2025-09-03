@@ -31,8 +31,7 @@ public class Student {
     @Column(name = "index_number", nullable = false, unique = true, length = 6)
     private String indexNumber;
 
-    @Column(name = "email", length = 100)
-    private String email;
+    // USUNIĘTE POLE EMAIL
 
     @Column(name = "created_date", nullable = false)
     private LocalDateTime createdDate;
@@ -45,7 +44,7 @@ public class Student {
     private Group group;
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore  // Ignoruj attendances w JSON - unikaj rekursji
+    @JsonIgnore
     private List<Attendance> attendances;
 
     public Student() {
@@ -72,8 +71,7 @@ public class Student {
     public String getIndexNumber() { return indexNumber; }
     public void setIndexNumber(String indexNumber) { this.indexNumber = indexNumber; }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    // USUNIĘTE GETTERY I SETTERY DLA EMAIL
 
     public LocalDateTime getCreatedDate() { return createdDate; }
     public void setCreatedDate(LocalDateTime createdDate) { this.createdDate = createdDate; }
