@@ -6,6 +6,9 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "`groups`")  // DODANE: Backtiki wokół nazwy tabeli
 public class Group {
@@ -34,6 +37,7 @@ public class Group {
     private List<Student> students;
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference  //dodane przez blad przy wprowadzaniu studentow
     private List<Schedule> schedules;
 
     public Group() {

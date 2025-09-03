@@ -7,6 +7,9 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "schedules")
 public class Schedule {
@@ -44,9 +47,11 @@ public class Schedule {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id", nullable = false)
+    @JsonManagedReference  //dodane przez blad przy wprowadzaniu studentow
     private Group group;
 
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference  //dodane przez blad przy wprowadzaniu studentow
     private List<Attendance> attendances;
 
     public Schedule() {

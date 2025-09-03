@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "attendances", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"student_id", "schedule_id"})
@@ -16,10 +19,12 @@ public class Attendance {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id", nullable = false)
+    @JsonManagedReference  //dodane przez blad przy wprowadzaniu studentow
     private Student student;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "schedule_id", nullable = false)
+    @JsonManagedReference  //dodane przez blad przy wprowadzaniu studentow
     private Schedule schedule;
 
     @Enumerated(EnumType.STRING)
