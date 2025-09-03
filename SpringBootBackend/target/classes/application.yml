@@ -6,38 +6,40 @@ spring:
     name: attendance-backend
 
   datasource:
-    # H2 Database (dla testów)
-    url: jdbc:h2:mem:attendance_db
-    driverClassName: org.h2.Driver
-    username: sa
-    password: password
+    # MySQL Configuration
+    url: jdbc:mysql://localhost:3306/attendance_db?useSSL=false&serverTimezone=Europe/Warsaw&allowPublicKeyRetrieval=true
+    username: attendance_user
+    password: attendance_password
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
-    # MySQL (odkomentuj jeśli używasz MySQL)
-    # url: jdbc:mysql://localhost:3306/attendance_db?useSSL=false&serverTimezone=UTC
-    # username: attendance_user
-    # password: attendance_password
-    # driver-class-name: com.mysql.cj.jdbc.Driver
+    # H2 Database (zakomentowane - dla testów)
+    # url: jdbc:h2:mem:attendance_db
+    # driverClassName: org.h2.Driver
+    # username: sa
+    # password: password
 
   jpa:
     hibernate:
-      ddl-auto: create-drop # create-drop dla testów, update dla produkcji
+      #zmiana z create-drop na update WAZNE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      ddl-auto: update # update dla pierwszego uruchomienia, potem update
     show-sql: true
     format-sql: true
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.H2Dialect # Dla H2
-        # dialect: org.hibernate.dialect.MySQL8Dialect # Dla MySQL
-    defer-datasource-initialization: true  # DODANE - pozwala na wykonanie import.sql po utworzeniu tabel
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+    defer-datasource-initialization: false  # Wyłączone dla MySQL
 
-  # DODANE - konfiguracja inicjalizacji bazy danych
+  # Konfiguracja inicjalizacji bazy danych
   sql:
     init:
-      mode: always  # Zawsze wykonuj skrypty inicjalizujące
+      mode: never  # Wyłączone dla MySQL (używaj migracji lub ręcznego tworzenia danych)
 
-  h2:
-    console:
-      enabled: true # http://localhost:8080/h2-console
-      path: /h2-console
+  # H2 Console (zakomentowane)
+  # h2:
+  #   console:
+  #     enabled: true
+  #     path: /h2-console
 
   jackson:
     time-zone: Europe/Warsaw
