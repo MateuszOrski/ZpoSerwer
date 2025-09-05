@@ -63,4 +63,38 @@ public class StudentService {
     public boolean existsByIndexNumber(String indexNumber) {
         return studentRepository.existsByIndexNumber(indexNumber);
     }
+    /**
+     * 🔧 NOWA METODA - Usuwa studenta z grupy (ustawia group = null)
+     */
+    public Student removeStudentFromGroup(String indexNumber) {
+        System.out.println("=== SERVICE: REMOVE STUDENT FROM GROUP ===");
+        System.out.println("🔍 Szukam studenta o indeksie: " + indexNumber);
+
+        Optional<Student> studentOpt = studentRepository.findByIndexNumber(indexNumber);
+
+        if (studentOpt.isEmpty()) {
+            System.err.println("❌ Student o indeksie " + indexNumber + " nie został znaleziony");
+            throw new RuntimeException("Student not found with index number: " + indexNumber);
+        }
+
+        Student student = studentOpt.get();
+        System.out.println("✅ Znaleziono studenta: " + student.getFullName());
+        System.out.println("📋 Obecna grupa: " + (student.getGroup() != null ? student.getGroup().getName() : "BRAK"));
+
+        // Usuń studenta z grupy
+        student.setGroup(null);
+
+        try {
+            Student updatedStudent = studentRepository.save(student);
+            System.out.println("💾 Student " + updatedStudent.getFullName() + " został usunięty z grupy");
+            System.out.println("📋 Nowa grupa: " + (updatedStudent.getGroup() != null ? updatedStudent.getGroup().getName() : "BRAK"));
+
+            return updatedStudent;
+
+        } catch (Exception e) {
+            System.err.println("❌ Błąd zapisywania studenta: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Error saving student: " + e.getMessage(), e);
+        }
+    }
 }
