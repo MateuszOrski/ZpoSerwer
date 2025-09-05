@@ -56,14 +56,22 @@ public class StudentController {
     @PutMapping("/{indexNumber}")
     public ResponseEntity<Student> updateStudent(@PathVariable String indexNumber,
                                                  @Valid @RequestBody Student student) {
+        System.out.println("=== OTRZYMANO REQUEST PUT ===");
+        System.out.println("Index: " + indexNumber);
+        System.out.println("Grupa z requesta: " + (student.getGroup() != null ? student.getGroup().getName() : "NULL"));
+
         return studentService.getStudentByIndexNumber(indexNumber)
                 .map(existingStudent -> {
                     existingStudent.setFirstName(student.getFirstName());
                     existingStudent.setLastName(student.getLastName());
-                    // USUNIĘTE: existingStudent.setEmail(student.getEmail());
+
+                    // KLUCZOWE: Aktualizuj grupę
                     if (student.getGroup() != null) {
                         existingStudent.setGroup(student.getGroup());
+                    } else {
+                        existingStudent.setGroup(null);
                     }
+
                     Student updatedStudent = studentService.saveStudent(existingStudent);
                     return ResponseEntity.ok(updatedStudent);
                 })
