@@ -181,4 +181,28 @@ public class StudentController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PutMapping("/remove-from-group/{indexNumber}")
+    public ResponseEntity<Student> removeStudentFromGroup(@PathVariable String indexNumber) {
+        System.out.println("=== CONTROLLER: REMOVE STUDENT FROM GROUP ===");
+        System.out.println("🔍 Otrzymano request dla indeksu: " + indexNumber);
+
+        try {
+            // 🔧 KLUCZOWE: Używamy nowej metody StudentService
+            Student updatedStudent = studentService.removeStudentFromGroup(indexNumber);
+
+            System.out.println("✅ Controller: Student " + updatedStudent.getFullName() + " usunięty z grupy");
+            return ResponseEntity.ok(updatedStudent);
+
+        } catch (RuntimeException e) {
+            System.err.println("❌ Controller: Błąd usuwania studenta z grupy: " + e.getMessage());
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            System.err.println("❌ Controller: Nieoczekiwany błąd: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
 }
