@@ -15,11 +15,11 @@ public class Attendance {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER) // ZMIENIONE na EAGER dla łatwiejszego dostępu
     @JoinColumn(name = "student_id", nullable = false)
     private Student student;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER) // ZMIENIONE na EAGER
     @JoinColumn(name = "schedule_id", nullable = false)
     private Schedule schedule;
 
@@ -52,6 +52,7 @@ public class Attendance {
         }
     }
 
+    // Konstruktory
     public Attendance() {
         this.markedAt = LocalDateTime.now();
     }
@@ -63,28 +64,76 @@ public class Attendance {
         this.status = status;
     }
 
+    public Attendance(Student student, Schedule schedule, AttendanceStatus status, String notes) {
+        this(student, schedule, status);
+        this.notes = notes;
+    }
+
     // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public Student getStudent() { return student; }
-    public void setStudent(Student student) { this.student = student; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Schedule getSchedule() { return schedule; }
-    public void setSchedule(Schedule schedule) { this.schedule = schedule; }
+    public Student getStudent() {
+        return student;
+    }
 
-    public AttendanceStatus getStatus() { return status; }
+    public void setStudent(Student student) {
+        this.student = student;
+    }
+
+    public Schedule getSchedule() {
+        return schedule;
+    }
+
+    public void setSchedule(Schedule schedule) {
+        this.schedule = schedule;
+    }
+
+    public AttendanceStatus getStatus() {
+        return status;
+    }
+
     public void setStatus(AttendanceStatus status) {
         this.status = status;
         this.markedAt = LocalDateTime.now();
     }
 
-    public String getNotes() { return notes; }
-    public void setNotes(String notes) { this.notes = notes; }
+    public String getNotes() {
+        return notes;
+    }
 
-    public LocalDateTime getMarkedAt() { return markedAt; }
-    public void setMarkedAt(LocalDateTime markedAt) { this.markedAt = markedAt; }
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
 
-    public Boolean getJustified() { return justified; }
-    public void setJustified(Boolean justified) { this.justified = justified; }
+    public LocalDateTime getMarkedAt() {
+        return markedAt;
+    }
+
+    public void setMarkedAt(LocalDateTime markedAt) {
+        this.markedAt = markedAt;
+    }
+
+    public Boolean getJustified() {
+        return justified;
+    }
+
+    public void setJustified(Boolean justified) {
+        this.justified = justified;
+    }
+
+    @Override
+    public String toString() {
+        return "Attendance{" +
+                "id=" + id +
+                ", student=" + (student != null ? student.getFullName() : "null") +
+                ", status=" + status +
+                ", markedAt=" + markedAt +
+                '}';
+    }
 }
