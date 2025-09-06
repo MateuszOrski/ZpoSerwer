@@ -80,8 +80,47 @@ public class ScheduleController {
 
     @PostMapping
     public ResponseEntity<Schedule> createSchedule(@Valid @RequestBody Schedule schedule) {
-        Schedule savedSchedule = scheduleService.saveSchedule(schedule);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedSchedule);
+        System.out.println("=== BACKEND: OTRZYMANO REQUEST TWORZENIA TERMINU ===");
+        System.out.println("📋 Subject: " + schedule.getSubject());
+        System.out.println("📅 Start: " + schedule.getStartTime());
+        System.out.println("📅 End: " + schedule.getEndTime());
+        System.out.println("🏫 Group: " + (schedule.getGroup() != null ? schedule.getGroup().getName() : "NULL"));
+        System.out.println("🏫 GroupName: " + schedule.getGroupName());
+
+        try {
+            // Jeśli brak grupy w obiekcie, ale jest groupName w requescie
+            if (schedule.getGroup() == null && schedule.getGroupName() != null) {
+                System.out.println("🔍 Szukam grupy o nazwie: " + schedule.getGroupName());
+                Optional<Group> group = groupService.getGroupByName(schedule.getGroupName());
+                if (group.isPresent()) {
+                    schedule.setGroup(group.get());
+                    System.out.println("✅ Znaleziono i przypisano grupę: " + group.get().getName());
+                } else {
+                    System.err.println("❌ Nie znaleziono grupy o nazwie: " + schedule.getGroupName());
+                    return ResponseEntity.badRequest().build();
+                }
+            }
+
+            // Walidacja - termin musi mieć grupę
+            if (schedule.getGroup() == null) {
+                System.err.println("❌ Termin nie ma przypisanej grupy!");
+                return ResponseEntity.badRequest().build();
+            }
+
+            // Zapisz termin przez serwis (który obsłuży managed entities)
+            Schedule savedSchedule = scheduleService.saveSchedule(schedule);
+            System.out.println("✅ Termin zapisany z ID: " + savedSchedule.getId());
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedSchedule);
+
+        } catch (RuntimeException e) {
+            System.err.println("❌ Błąd logiki biznesowej: " + e.getMessage());
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            System.err.println("❌ Błąd wewnętrzny serwera: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @PutMapping("/{id}")

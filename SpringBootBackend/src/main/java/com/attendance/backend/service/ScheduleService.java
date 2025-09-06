@@ -48,19 +48,73 @@ public class ScheduleService {
         }
     }
 
+    // ================================
+    // 🔧 GŁÓWNA POPRAWKA - saveSchedule
+    // ================================
     public Schedule saveSchedule(Schedule schedule) {
-        // Jeśli brak grupy w obiekcie, ale jest groupName w requescie
-        if (schedule.getGroup() == null && schedule.getGroupName() != null) {
-            Optional<Group> group = groupRepository.findByName(schedule.getGroupName());
-            if (group.isPresent()) {
-                schedule.setGroup(group.get());
+        System.out.println("=== BACKEND: SAVE SCHEDULE ===");
+        System.out.println("📋 Subject: " + schedule.getSubject());
+        System.out.println("📅 Start: " + schedule.getStartTime());
+        System.out.println("🏫 Group w obiekcie: " + (schedule.getGroup() != null ? schedule.getGroup().getName() : "NULL"));
+        System.out.println("🏫 GroupName: " + schedule.getGroupName());
+
+        try {
+            // 🔧 KLUCZOWA POPRAWKA: Znajdź i przypisz MANAGED Group entity
+            if (schedule.getGroup() != null) {
+                String groupName = schedule.getGroup().getName();
+                System.out.println("🔍 Szukam istniejącej grupy: " + groupName);
+
+                Optional<Group> managedGroup = groupRepository.findByName(groupName);
+                if (managedGroup.isPresent()) {
+                    // Przypisz MANAGED entity z bazy danych
+                    schedule.setGroup(managedGroup.get());
+                    System.out.println("✅ Przypisano managed group: " + managedGroup.get().getName() + " (ID: " + managedGroup.get().getId() + ")");
+                } else {
+                    System.err.println("❌ Nie znaleziono grupy: " + groupName);
+                    throw new RuntimeException("Grupa '" + groupName + "' nie istnieje w bazie danych!");
+                }
             }
+            // Fallback - jeśli brak group ale jest groupName (stara logika)
+            else if (schedule.getGroupName() != null && !schedule.getGroupName().trim().isEmpty()) {
+                System.out.println("🔍 Fallback: szukam grupy po groupName: " + schedule.getGroupName());
+
+                Optional<Group> group = groupRepository.findByName(schedule.getGroupName());
+                if (group.isPresent()) {
+                    schedule.setGroup(group.get());
+                    System.out.println("✅ Fallback: Przypisano grupę: " + group.get().getName());
+                } else {
+                    System.err.println("❌ Fallback: Nie znaleziono grupy: " + schedule.getGroupName());
+                    throw new RuntimeException("Grupa '" + schedule.getGroupName() + "' nie istnieje w bazie danych!");
+                }
+            } else {
+                System.err.println("❌ Brak informacji o grupie w schedule!");
+                throw new RuntimeException("Termin musi być przypisany do grupy!");
+            }
+
+            // Walidacja - sprawdź czy grupa jest managed
+            if (schedule.getGroup().getId() == null) {
+                System.err.println("❌ Grupa nie ma ID - nie jest managed entity!");
+                throw new RuntimeException("Błąd wewnętrzny: grupa nie jest managed entity");
+            }
+
+            // Zapisz schedule z managed Group entity
+            Schedule savedSchedule = scheduleRepository.save(schedule);
+            System.out.println("✅ Termin zapisany z ID: " + savedSchedule.getId());
+            System.out.println("✅ Przypisany do grupy: " + savedSchedule.getGroup().getName() + " (ID: " + savedSchedule.getGroup().getId() + ")");
+
+            return savedSchedule;
+
+        } catch (Exception e) {
+            System.err.println("❌ Błąd zapisywania terminu: " + e.getMessage());
+            e.printStackTrace();
+            throw e; // Przekaż błąd dalej
         }
-        return scheduleRepository.save(schedule);
     }
 
     public void deleteSchedule(Long id) {
+        System.out.println("🗑️ Usuwam termin ID: " + id);
         scheduleRepository.deleteById(id);
+        System.out.println("✅ Termin usunięty");
     }
 
     public List<Schedule> getUpcomingSchedules(Group group) {
