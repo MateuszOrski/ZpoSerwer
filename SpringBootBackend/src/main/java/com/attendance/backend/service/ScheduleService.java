@@ -33,12 +33,19 @@ public class ScheduleService {
         return scheduleRepository.findByGroupOrderByStartTimeDesc(group);
     }
 
+    // DODANA METODA - pobieranie terminów według nazwy grupy
     public List<Schedule> getSchedulesByGroupName(String groupName) {
+        System.out.println("🔄 ScheduleService: getSchedulesByGroupName dla grupy: '" + groupName + "'");
+
         Optional<Group> group = groupRepository.findByName(groupName);
         if (group.isPresent()) {
-            return scheduleRepository.findByGroupOrderByStartTimeDesc(group.get());
+            List<Schedule> schedules = scheduleRepository.findByGroupOrderByStartTimeDesc(group.get());
+            System.out.println("✅ ScheduleService: Znaleziono " + schedules.size() + " terminów");
+            return schedules;
+        } else {
+            System.out.println("❌ ScheduleService: Grupa '" + groupName + "' nie została znaleziona");
+            return List.of();
         }
-        return List.of();
     }
 
     public Schedule saveSchedule(Schedule schedule) {
