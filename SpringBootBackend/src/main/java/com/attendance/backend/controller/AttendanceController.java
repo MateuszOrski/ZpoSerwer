@@ -34,10 +34,10 @@ public class AttendanceController {
 
         try {
             Attendance savedAttendance = attendanceService.markAttendance(attendance);
-            System.out.println("✅ Zapisano attendance z ID: " + savedAttendance.getId());
+            System.out.println("Zapisano attendance z ID: " + savedAttendance.getId());
             return ResponseEntity.status(HttpStatus.CREATED).body(savedAttendance);
         } catch (Exception e) {
-            System.err.println("❌ Błąd zapisywania attendance: " + e.getMessage());
+            System.err.println("Błąd zapisywania attendance: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -60,14 +60,14 @@ public class AttendanceController {
                     attendanceDTO.getStatus(),
                     attendanceDTO.getNotes()
             );
-            System.out.println("✅ Zapisano attendance studenta z ID: " + attendance.getId());
+            System.out.println("Zapisano attendance studenta z ID: " + attendance.getId());
             return ResponseEntity.status(HttpStatus.CREATED).body(attendance);
         } catch (RuntimeException e) {
-            System.err.println("❌ Błąd zapisywania attendance studenta: " + e.getMessage());
+            System.err.println("Błąd zapisywania attendance studenta: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
         } catch (Exception e) {
-            System.err.println("❌ Nieoczekiwany błąd: " + e.getMessage());
+            System.err.println("Nieoczekiwany błąd: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -90,7 +90,7 @@ public class AttendanceController {
 
             return ResponseEntity.ok(attendances);
         } catch (Exception e) {
-            System.err.println("❌ Błąd pobierania obecności: " + e.getMessage());
+            System.err.println("Błąd pobierania obecności: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.ok(new ArrayList<>());
         }
@@ -102,10 +102,10 @@ public class AttendanceController {
 
         try {
             List<Attendance> attendances = attendanceService.getAttendancesByStudentIndexNumber(indexNumber);
-            System.out.println("📋 Znaleziono " + attendances.size() + " obecności dla studenta: " + indexNumber);
+            System.out.println("Znaleziono " + attendances.size() + " obecności dla studenta: " + indexNumber);
             return ResponseEntity.ok(attendances);
         } catch (Exception e) {
-            System.err.println("❌ Błąd pobierania obecności studenta: " + e.getMessage());
+            System.err.println("Błąd pobierania obecności studenta: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.ok(new ArrayList<>());
         }
@@ -117,10 +117,10 @@ public class AttendanceController {
 
         try {
             Map<String, Object> stats = attendanceService.getGroupAttendanceStatistics(groupName);
-            System.out.println("📊 Wygenerowano statystyki dla grupy: " + groupName);
+            System.out.println("Wygenerowano statystyki dla grupy: " + groupName);
             return ResponseEntity.ok(stats);
         } catch (Exception e) {
-            System.err.println("❌ Błąd generowania statystyk: " + e.getMessage());
+            System.err.println("Błąd generowania statystyk: " + e.getMessage());
             e.printStackTrace();
             Map<String, Object> errorMap = new HashMap<>();
             errorMap.put("error", "Could not generate stats");
@@ -135,19 +135,18 @@ public class AttendanceController {
 
         try {
             attendanceService.removeAttendance(indexNumber, scheduleId);
-            System.out.println("✅ Usunięto attendance dla studenta: " + indexNumber + ", schedule: " + scheduleId);
+            System.out.println("Usunięto attendance dla studenta: " + indexNumber + ", schedule: " + scheduleId);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
-            System.err.println("❌ Nie znaleziono attendance do usunięcia: " + e.getMessage());
+            System.err.println("Nie znaleziono attendance do usunięcia: " + e.getMessage());
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
-            System.err.println("❌ Błąd usuwania attendance: " + e.getMessage());
+            System.err.println("Błąd usuwania attendance: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    // Health check
     @GetMapping("/health")
     public ResponseEntity<String> healthCheck() {
         return ResponseEntity.ok("Attendance API is running");

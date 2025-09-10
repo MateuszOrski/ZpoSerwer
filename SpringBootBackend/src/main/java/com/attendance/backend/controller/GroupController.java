@@ -60,7 +60,6 @@ public class GroupController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // FIXED DELETE METHOD
     @DeleteMapping("/{name}")
     public ResponseEntity<Void> deleteGroup(@PathVariable String name) {
         Optional<Group> group = groupService.getGroupByName(name);

@@ -33,7 +33,6 @@ public class ScheduleService {
         return scheduleRepository.findByGroupOrderByStartTimeDesc(group);
     }
 
-    // DODANA METODA - pobieranie terminów według nazwy grupy
     public List<Schedule> getSchedulesByGroupName(String groupName) {
         System.out.println("🔄 ScheduleService: getSchedulesByGroupName dla grupy: '" + groupName + "'");
 
@@ -48,9 +47,6 @@ public class ScheduleService {
         }
     }
 
-    // ================================
-    // 🔧 GŁÓWNA POPRAWKA - saveSchedule
-    // ================================
     public Schedule saveSchedule(Schedule schedule) {
         System.out.println("=== BACKEND: SAVE SCHEDULE ===");
         System.out.println("📋 Subject: " + schedule.getSubject());
@@ -59,14 +55,12 @@ public class ScheduleService {
         System.out.println("🏫 GroupName: " + schedule.getGroupName());
 
         try {
-            // 🔧 KLUCZOWA POPRAWKA: Znajdź i przypisz MANAGED Group entity
             if (schedule.getGroup() != null) {
                 String groupName = schedule.getGroup().getName();
                 System.out.println("🔍 Szukam istniejącej grupy: " + groupName);
 
                 Optional<Group> managedGroup = groupRepository.findByName(groupName);
                 if (managedGroup.isPresent()) {
-                    // Przypisz MANAGED entity z bazy danych
                     schedule.setGroup(managedGroup.get());
                     System.out.println("✅ Przypisano managed group: " + managedGroup.get().getName() + " (ID: " + managedGroup.get().getId() + ")");
                 } else {
@@ -74,7 +68,6 @@ public class ScheduleService {
                     throw new RuntimeException("Grupa '" + groupName + "' nie istnieje w bazie danych!");
                 }
             }
-            // Fallback - jeśli brak group ale jest groupName (stara logika)
             else if (schedule.getGroupName() != null && !schedule.getGroupName().trim().isEmpty()) {
                 System.out.println("🔍 Fallback: szukam grupy po groupName: " + schedule.getGroupName());
 
@@ -97,7 +90,6 @@ public class ScheduleService {
                 throw new RuntimeException("Błąd wewnętrzny: grupa nie jest managed entity");
             }
 
-            // Zapisz schedule z managed Group entity
             Schedule savedSchedule = scheduleRepository.save(schedule);
             System.out.println("✅ Termin zapisany z ID: " + savedSchedule.getId());
             System.out.println("✅ Przypisany do grupy: " + savedSchedule.getGroup().getName() + " (ID: " + savedSchedule.getGroup().getId() + ")");

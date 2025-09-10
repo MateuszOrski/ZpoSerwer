@@ -31,16 +31,13 @@ public class Group {
     @Column(name = "active", nullable = false)
     private Boolean active = true;
 
-    // ⭐ KLUCZOWA ZMIANA: USUNIĘTO cascade = CascadeType.ALL
-    // Teraz usuwanie grupy NIE usuwa studentów automatycznie
     @OneToMany(mappedBy = "group", fetch = FetchType.LAZY)
     @JsonIgnore  // Ignoruj students w JSON - unikaj rekursji
     private List<Student> students;
 
-    // ⭐ KLUCZOWA ZMIANA: USUNIĘTO cascade = CascadeType.ALL dla schedules też
-    // Harmonogramy będą usuwane osobno przez serwis
+
     @OneToMany(mappedBy = "group", fetch = FetchType.LAZY)
-    @JsonIgnore  // Ignoruj schedules w JSON - unikaj rekursji
+    @JsonIgnore
     private List<Schedule> schedules;
 
     public Group() {
@@ -53,7 +50,6 @@ public class Group {
         this.specialization = specialization;
     }
 
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

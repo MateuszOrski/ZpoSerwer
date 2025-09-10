@@ -52,7 +52,6 @@ public class Attendance {
         }
     }
 
-    // Konstruktory
     public Attendance() {
         this.markedAt = LocalDateTime.now();
     }
@@ -69,7 +68,6 @@ public class Attendance {
         this.notes = notes;
     }
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }

@@ -37,7 +37,7 @@ public class ScheduleController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // DODANA METODA - pobieranie terminów według nazwy grupy
+    //pobieranie terminów według nazwy grupy
     @GetMapping("/group/{groupName}")
     public ResponseEntity<List<Schedule>> getSchedulesByGroupName(@PathVariable String groupName) {
         System.out.println("=== DEBUG GET SCHEDULES BY GROUP NAME ===");
@@ -48,7 +48,7 @@ public class ScheduleController {
             String decodedGroupName = java.net.URLDecoder.decode(groupName, java.nio.charset.StandardCharsets.UTF_8);
             System.out.println("🔍 Zdekodowana nazwa: '" + decodedGroupName + "'");
 
-            // Sprawdź czy grupa istnieje
+            //grupa istnieje
             Optional<Group> groupOpt = groupService.getGroupByName(decodedGroupName);
             if (groupOpt.isEmpty()) {
                 System.out.println("❌ Grupa NIE znaleziona w bazie!");
@@ -58,11 +58,10 @@ public class ScheduleController {
             Group group = groupOpt.get();
             System.out.println("✅ Grupa znaleziona: " + group.getName() + " (ID: " + group.getId() + ")");
 
-            // Pobierz terminy dla grupy
+            //terminy dla grupy
             List<Schedule> schedules = scheduleService.getSchedulesByGroupName(decodedGroupName);
             System.out.println("📋 Znaleziono " + schedules.size() + " terminów dla grupy '" + decodedGroupName + "'");
 
-            // Debug - wypisz szczegóły każdego terminu
             for (int i = 0; i < schedules.size(); i++) {
                 Schedule s = schedules.get(i);
                 System.out.println("  " + (i+1) + ". " + s.getSubject() +
@@ -88,7 +87,6 @@ public class ScheduleController {
         System.out.println("🏫 GroupName: " + schedule.getGroupName());
 
         try {
-            // Jeśli brak grupy w obiekcie, ale jest groupName w requescie
             if (schedule.getGroup() == null && schedule.getGroupName() != null) {
                 System.out.println("🔍 Szukam grupy o nazwie: " + schedule.getGroupName());
                 Optional<Group> group = groupService.getGroupByName(schedule.getGroupName());
@@ -101,13 +99,11 @@ public class ScheduleController {
                 }
             }
 
-            // Walidacja - termin musi mieć grupę
             if (schedule.getGroup() == null) {
                 System.err.println("❌ Termin nie ma przypisanej grupy!");
                 return ResponseEntity.badRequest().build();
             }
 
-            // Zapisz termin przez serwis (który obsłuży managed entities)
             Schedule savedSchedule = scheduleService.saveSchedule(schedule);
             System.out.println("✅ Termin zapisany z ID: " + savedSchedule.getId());
 

@@ -63,9 +63,7 @@ public class StudentService {
     public boolean existsByIndexNumber(String indexNumber) {
         return studentRepository.existsByIndexNumber(indexNumber);
     }
-    /**
-     * 🔧 NOWA METODA - Usuwa studenta z grupy (ustawia group = null)
-     */
+
     public Student removeStudentFromGroup(String indexNumber) {
         System.out.println("=== SERVICE: REMOVE STUDENT FROM GROUP ===");
         System.out.println("🔍 Szukam studenta o indeksie: " + indexNumber);

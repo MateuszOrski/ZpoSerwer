@@ -30,19 +30,16 @@ public class AttendanceService {
     private GroupRepository groupRepository;
 
     public Attendance markAttendance(Attendance attendance) {
-        // Sprawdź czy już istnieje wpis dla tego studenta i terminu
         Optional<Attendance> existing = attendanceRepository.findByStudentAndSchedule(
                 attendance.getStudent(), attendance.getSchedule());
 
         if (existing.isPresent()) {
-            // Zaktualizuj istniejący wpis
             Attendance existingAttendance = existing.get();
             existingAttendance.setStatus(attendance.getStatus());
             existingAttendance.setNotes(attendance.getNotes());
             existingAttendance.setJustified(attendance.getJustified());
             return attendanceRepository.save(existingAttendance);
         } else {
-            // Utwórz nowy wpis
             return attendanceRepository.save(attendance);
         }
     }
@@ -50,17 +47,13 @@ public class AttendanceService {
     public Attendance markStudentAttendance(String firstName, String lastName, String indexNumber,
                                             String groupName, Long scheduleId,
                                             Attendance.AttendanceStatus status, String notes) {
-        // Znajdź lub utwórz studenta
         Optional<Student> studentOpt = studentRepository.findByIndexNumber(indexNumber);
         Student student;
 
         if (studentOpt.isPresent()) {
             student = studentOpt.get();
         } else {
-            // Utwórz nowego studenta
             student = new Student(firstName, lastName, indexNumber);
-
-            // Przypisz do grupy jeśli podana
             if (groupName != null && !groupName.trim().isEmpty()) {
                 Optional<Group> group = groupRepository.findByName(groupName);
                 if (group.isPresent()) {
@@ -71,13 +64,11 @@ public class AttendanceService {
             student = studentRepository.save(student);
         }
 
-        // Znajdź termin
         Optional<Schedule> scheduleOpt = scheduleRepository.findById(scheduleId);
         if (!scheduleOpt.isPresent()) {
             throw new RuntimeException("Schedule not found with id: " + scheduleId);
         }
 
-        // Utwórz/zaktualizuj obecność
         Attendance attendance = new Attendance(student, scheduleOpt.get(), status);
         attendance.setNotes(notes);
 

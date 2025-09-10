@@ -31,7 +31,6 @@ public class Student {
     @Column(name = "index_number", nullable = false, unique = true, length = 6)
     private String indexNumber;
 
-    // USUNIĘTE POLE EMAIL
 
     @Column(name = "created_date", nullable = false)
     private LocalDateTime createdDate;
@@ -58,7 +57,6 @@ public class Student {
         this.indexNumber = indexNumber;
     }
 
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -71,7 +69,7 @@ public class Student {
     public String getIndexNumber() { return indexNumber; }
     public void setIndexNumber(String indexNumber) { this.indexNumber = indexNumber; }
 
-    // USUNIĘTE GETTERY I SETTERY DLA EMAIL
+
 
     public LocalDateTime getCreatedDate() { return createdDate; }
     public void setCreatedDate(LocalDateTime createdDate) { this.createdDate = createdDate; }

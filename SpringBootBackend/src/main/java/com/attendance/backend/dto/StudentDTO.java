@@ -21,7 +21,6 @@ public class StudentDTO {
     @Pattern(regexp = "\\d{6}", message = "Numer indeksu musi składać się z dokładnie 6 cyfr")
     private String indexNumber;
 
-    // USUNIĘTE POLE EMAIL
 
     private LocalDateTime createdDate;
 
@@ -41,7 +40,6 @@ public class StudentDTO {
 
     private Double attendanceRate;
 
-    // Constructors
     public StudentDTO() {}
 
     public StudentDTO(String firstName, String lastName, String indexNumber) {
@@ -56,7 +54,6 @@ public class StudentDTO {
         this.groupName = groupName;
     }
 
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -75,7 +72,6 @@ public class StudentDTO {
     public String getIndexNumber() { return indexNumber; }
     public void setIndexNumber(String indexNumber) { this.indexNumber = indexNumber; }
 
-    // USUNIĘTE GETTERY I SETTERY DLA EMAIL
 
     public LocalDateTime getCreatedDate() { return createdDate; }
     public void setCreatedDate(LocalDateTime createdDate) { this.createdDate = createdDate; }

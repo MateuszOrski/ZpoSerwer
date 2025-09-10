@@ -39,7 +39,6 @@ public class ScheduleDTO {
 
     private Integer absentCount;
 
-    // Constructors
     public ScheduleDTO() {}
 
     public ScheduleDTO(String subject, LocalDateTime startTime, LocalDateTime endTime, String groupName) {
@@ -49,7 +48,6 @@ public class ScheduleDTO {
         this.groupName = groupName;
     }
 
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
